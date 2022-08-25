@@ -1,0 +1,34 @@
+services:
+
+  db:
+    image: mysql
+    restart: always
+    networks: 
+      - default
+    environment:
+      MYSQL_DATABASE: files_database
+      MYSQL_USER: 'local'
+      MYSQL_PASSWORD: DB_STRONG_PASSWORD
+      MYSQL_ROOT_PASSWORD: ROOT_PASSWORD
+    ports: 
+      - '3306:3306'
+    expose: 
+      - '3306'
+
+  api: 
+      container_name: "api_backend"
+      build: 
+        context: .
+        dockerfile: api.Dockerfile
+      restart: always
+      ports: 
+      - '8080:8080'
+      expose: 
+      - '8080'
+      depends_on:
+      - db
+
+networks:
+  default:
+
+
