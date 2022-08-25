@@ -1,6 +1,7 @@
 package models
 
 import (
+	"JSON-API-GOLANG/api/utils"
 	"errors"
 	"regexp"
 
@@ -13,6 +14,30 @@ type User struct {
 	Email    string `gorm:"size:255;not null;unique;<-:create" json:"email"`
 	Password string `gorm:"size:255;not null;<-:update" json:"password"`
 	Age      int    `gorm:"size:3;not null;<-:update" json:"age"`
+}
+
+func VerifyPassword(password, hashedPassword string) error {
+	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
+}
+
+func LoginCheck(email string, password string) (string, error) {
+	u := User{}
+
+	if err := db.Model(User{}).Where("Email = ?", email).Take(&u).Error; err != nil {
+		return "", err
+	}
+
+	if err := VerifyPassword(password, u.Password); err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
+		return "", err
+	}
+
+	token, err := utils.GenerateToken(u.ID)
+
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
 }
 
 func (u *User) Create() error {
@@ -68,11 +93,9 @@ func GetUserByID(userID uint64) (*User, error) {
 
 func GetAllUsers() (*[]User, error) {
 	var Users []User
-
 	if err := db.Find(&Users).Error; err != nil {
 		return nil, err
 	}
-
 	for i := range Users {
 		Users[i].Password = ""
 	}

@@ -22,15 +22,15 @@ func ConnectDataBase() {
 
 	DBURL := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", DbUser, DbPassword, DbHost, DbPort, DbName)
 
-	db, err := gorm.Open(Dbdriver, DBURL)
-
+	DB, err := gorm.Open(Dbdriver, DBURL)
+	defer DB.Close()
 	if err != nil {
 		fmt.Println("Cannot connect to database ", Dbdriver)
 		log.Fatal("connection error:", err)
 	} else {
 		fmt.Println("We are connected to the database ", Dbdriver)
 	}
-
-	db.AutoMigrate(&User{})
-	db.AutoMigrate(&Files{})
+	DB.AutoMigrate(&User{})
+	DB.AutoMigrate(&Files{})
+	db = DB
 }

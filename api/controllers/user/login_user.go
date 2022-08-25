@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func updateUser(c *gin.Context) {
+func Login(c *gin.Context) {
 	user := models.User{}
 
 	if err := c.ShouldBindJSON(&user); err != nil {
@@ -15,13 +15,12 @@ func updateUser(c *gin.Context) {
 		return
 	}
 
-	err := user.Update()
+	token, err := models.LoginCheck(user.Email, user.Password)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "username or password is incorrect."})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "update was made with success"})
-
+	c.JSON(http.StatusOK, gin.H{"token": token})
 }

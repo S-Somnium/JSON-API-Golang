@@ -1,0 +1,17 @@
+services:
+
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: files_database
+      MYSQL_USER: 'local'
+      MYSQL_PASSWORD: DB_STRONG_PASSWORD
+      MYSQL_ROOT_PASSWORD: ROOT_PASSWORD
+    ports: 
+      - '3306:3306'
+    expose: 
+      - '3306'
+
+
+
