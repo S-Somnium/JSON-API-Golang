@@ -21,7 +21,6 @@ func Login(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "username or password is incorrect."})
 		return
 	}
-	c.SetCookie("token", token, 60*60*24, "/", "http://localhost:8080", true, true)
 	c.SetCookie("token", token, 60*60*24, "/", "http://localhost:8081", true, true)
 	c.JSON(http.StatusOK, gin.H{"token": token})
 }

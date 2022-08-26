@@ -36,36 +36,20 @@
 
 
 <script>
-import axios from "axios";
-import router from "../router";
+//import axios from "axios";
+//import router from "../router";
 
 export default {
-    name: "register-page",
+    name: "user-page",
     data() {
-        return {
-            name: '',
-            email: '',
-            password: '',
-            age: ''
-        }
+       
     },
     methods: {
-        register() {
-            const { name, email, password, age } = this
-            axios
-                .post('http://localhost:8080/register', { name, email, password, age: parseInt(age) })
-                .then(response => {
-                    alert(response.data.message)
-                    router.push({ name: 'login' })
-                })
-                .catch(error => alert(error.response.data.error))
-        }
+       
     }
 };
 </script>
 
 <style scoped>
-.card {
-    padding: 10px;
-}
+
 </style>
